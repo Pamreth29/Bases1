@@ -37,7 +37,7 @@ BEGIN
 	UPDATE EMPLEADO SET Nombre = @Nombre, Salario = @Salario WHERE id = @id
 END
 --*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-CREATE PROCEDURE SP_Eliminar(@id INT)
+ALTER PROCEDURE SP_Eliminar(@id INT)
 AS
 BEGIN
 	DELETE FROM EMPLEADO WHERE id = @id
