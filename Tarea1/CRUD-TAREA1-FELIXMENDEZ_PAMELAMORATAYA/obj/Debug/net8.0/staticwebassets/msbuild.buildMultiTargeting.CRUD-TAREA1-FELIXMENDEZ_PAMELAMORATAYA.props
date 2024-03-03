@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\CRUD-TAREA1-FELIXMENDEZ_PAMELAMORATAYA.props" />
+</Project>
