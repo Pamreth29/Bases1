@@ -1,0 +1,72 @@
+Version final ya corregida del SP de insertar empleados con todas las validaciones de la capa de datos 
+
+/****** Object:  StoredProcedure [dbo].[SPInsertEmpleado]    Script Date: 6/3/2024 10:54:26 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Este bloque define un procedimiento almacenado llamado "InsertarEmpleado"
+ALTER PROCEDURE [dbo].[SPInsertEmpleado]
+    @inNombre VARCHAR(64), -- Parámetro de entrada: nombre del empleado (hasta 64 caracteres)
+    @inSalario MONEY, -- Parámetro de entrada: salario del empleado (tipo de datos MONEY)
+    @OutResulTCode INT OUTPUT -- Parámetro de salida: código de resultado de la ejecución
+AS
+BEGIN
+    SET NOCOUNT ON; -- Evita que el número de filas afectadas se devuelva como parte del resultado
+
+    BEGIN TRY -- Inicia un bloque TRY para manejar excepciones
+        -- Inicialización del código de resultado
+        SET @OutResulTCode = 0;
+
+        -- Validaciones
+        IF EXISTS (SELECT 1 FROM dbo.Empleado WHERE Nombre = @inNombre)
+        BEGIN
+            SET @OutResulTCode = 50006; -- Código de error: Nombre de Empleado ya existe
+            RETURN; -- Retorna inmediatamente, saliendo del procedimiento almacenado
+        END;
+
+        -- Inserta un nuevo empleado en la tabla Empleado
+        INSERT INTO Empleado (Nombre, Salario)
+        VALUES (@inNombre, @inSalario);
+
+        -- Si no hubo errores, establece el código de resultado en 0 (éxito)
+        SET @OutResulTCode = 0;
+    END TRY
+    BEGIN CATCH -- Si ocurre alguna excepción, entra en este bloque
+        -- Establece el código de resultado en 50005 (error)
+        SET @OutResulTCode = 50005;
+
+        IF @@TRANCOUNT > 0 -- Verifica si hay una transacción en curso
+            ROLLBACK TRAN; -- Revierte la transacción
+
+        -- Registra el error en la tabla DBErrors
+        INSERT INTO dbo.DBErrors (
+            UserName,
+            ErrorNumber,
+            ErrorState,
+            ErrorSeverity,
+            ErrorLine,
+            ErrorProcedure,
+            ErrorMessage,
+            ErrorDateTime
+        )
+        VALUES (
+            SUSER_SNAME(),
+            ERROR_NUMBER(),
+            ERROR_STATE(),
+            ERROR_SEVERITY(),
+            ERROR_LINE(),
+            ERROR_PROCEDURE(),
+            ERROR_MESSAGE(),
+            GETDATE()
+        );
+    END CATCH; -- Fin del bloque CATCH
+
+    SET NOCOUNT OFF; -- Restaura el recuento de filas afectadas para las instrucciones SELECT, INSERT, UPDATE y DELETE
+END; -- Fin del procedimiento almacenado
+
+
+
+
+
