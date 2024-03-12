@@ -1,0 +1,65 @@
+Version inicial de los metodos de llamadas de los SP en VisualStudio con la utilizacion de C#
+llamando a los SP iniciales todavia sin las validaciones de nombre repetido y demas
+
+public partial class _Default : Page // Definición de la clase _Default que hereda de la clase Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        // Método que se ejecuta al cargar la página
+        if (!IsPostBack) // Verifica si la página se carga por primera vez o es un postback
+        {
+            CargarListaEmpleados(); // Llama al método para cargar la lista de empleados
+        }
+    }
+
+    // Método para cargar la lista de empleados desde la base de datos
+    public void CargarListaEmpleados()
+    {
+        // Establece una conexión a la base de datos y ejecuta un procedimiento almacenado para obtener los datos
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connDB"].ConnectionString))
+        {
+            SqlCommand cmd = new SqlCommand(); // Crea un nuevo comando SQL
+            cmd.CommandType = CommandType.StoredProcedure; // Especifica que se usará un procedimiento almacenado
+            cmd.CommandText = "SPMostrarListaEmpleados"; // Especifica el nombre del procedimiento almacenado
+            cmd.Connection = conn; // Establece la conexión para el comando
+            conn.Open(); // Abre la conexión
+            gvdEmpleados.DataSource = cmd.ExecuteReader(); // Establece el origen de datos del GridView
+            gvdEmpleados.DataBind(); // Vincula los datos al GridView
+        }
+    }
+
+    // Método para guardar un nuevo empleado en la base de datos
+    public void GuardarEmpleado()
+    {
+        // Establece una conexión a la base de datos y ejecuta un procedimiento almacenado para insertar un nuevo empleado
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connDB"].ConnectionString))
+        {
+            SqlCommand cmd = new SqlCommand(); // Crea un nuevo comando SQL
+            cmd.CommandType = CommandType.StoredProcedure; // Especifica que se usará un procedimiento almacenado
+            cmd.CommandText = "SPInsertEmpleado"; // Especifica el nombre del procedimiento almacenado
+            cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = txtNombre.Text.Trim(); // Agrega un parámetro para el nombre del empleado
+            cmd.Parameters.Add("@Salario", SqlDbType.Money).Value = Convert.ToDecimal(txtSalario.Text.Trim()); // Agrega un parámetro para el salario del empleado
+            cmd.Connection = conn; // Establece la conexión para el comando
+            conn.Open(); // Abre la conexión
+            cmd.ExecuteNonQuery(); // Ejecuta el comando para insertar el empleado
+        }
+    }
+
+    protected void btnNuevo_Click(object sender, EventArgs e)
+    {
+        // Manejador de eventos para el botón "Nuevo"
+        pnlDatoEmpleado.Visible = false; // Oculta el panel de datos del empleado
+        pnlAltaEmpleado.Visible = true; // Muestra el panel de alta de empleado
+    }
+
+    protected void btnInsertar_Click(object sender, EventArgs e)
+    {
+        // Manejador de eventos para el botón "Insertar"
+        pnlAltaEmpleado.Visible = false; // Oculta el panel de alta de empleado
+        pnlDatoEmpleado.Visible = true; // Muestra el panel de datos del empleado
+        GuardarEmpleado(); // Guarda el nuevo empleado en la base de datos
+        CargarListaEmpleados(); // Recarga la lista de empleados
+    }
+}
+
+

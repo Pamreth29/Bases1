@@ -1,0 +1,18 @@
+Version final del SPMostrarListaEmpleados
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[SPMostrarListaEmpleados]
+AS
+BEGIN 
+SELECT [id]
+      ,[Nombre]
+      ,[Salario]
+  FROM [dbo].[Empleado]
+  ORDER BY [Nombre] ASC;
+END;
+
+
+

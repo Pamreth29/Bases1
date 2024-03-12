@@ -1,0 +1,22 @@
+Version inicial del SPMostrarListaEmpleados
+
+/****** Object:  StoredProcedure [dbo].[SPInsertEmpleado]    Script Date: 4/3/2024 11:17:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[SPInsertEmpleado]
+	@Nombre VARCHAR(64),
+	@Salario MONEY
+
+AS
+BEGIN
+
+INSERT INTO Empleado (Nombre,Salario) 
+VALUES(@Nombre,@Salario);
+
+END;
+
+
+
+

@@ -1,0 +1,37 @@
+Version inicial de lo creado para el desarrollo web en HTML 5 y las diferentes llamadas 
+
+
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <!-- Este bloque contiene dos paneles: pnlDatoEmpleado y pnlAltaEmpleado -->
+    <div class="jumbotron">
+        
+        <!-- Panel para mostrar datos de empleados -->
+        <asp:Panel runat="server" ID="pnlDatoEmpleado">
+            <!-- GridView para mostrar la lista de empleados -->
+            <asp:GridView ID="gvdEmpleados" runat="server" AutoGenerateColumns="true">
+            </asp:GridView>
+            
+            <!-- Botón para agregar un nuevo empleado -->
+            <asp:Button ID="btnNuevo" Text="Insertar" runat="server" OnClick="btnNuevo_Click" />
+        </asp:Panel>
+
+        <!-- Panel para agregar un nuevo empleado -->
+        <asp:Panel ID="pnlAltaEmpleado" runat="server" Visible="false">
+           
+            <!-- Campos para ingresar datos del nuevo empleado -->
+            <div>
+                <asp:Label ID="IblNombre" Text="Nombre" runat="server"></asp:Label>
+                <asp:TextBox ID="txtNombre" runat="server" />
+            </div>
+
+            <div>
+                <asp:Label ID="lbSalario" Text="Salario" runat="server"></asp:Label>
+                <asp:TextBox ID="txtSalario" runat="server" />
+            </div>
+
+            <!-- Botón para insertar el nuevo empleado -->
+            <asp:Button ID="btnInsertar" runat="server" Text="Insertar" OnClick="btnInsertar_Click" />
+        </asp:Panel> 
+
+    </div>
+</asp:Content>
